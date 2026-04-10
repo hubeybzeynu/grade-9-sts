@@ -150,7 +150,9 @@ const ReportCard = () => {
                 <div>
                   <p className="text-sm font-semibold">Section Rank</p>
                   <p className="text-xs text-muted-foreground">
-                    {typeof rank === 'object' ? JSON.stringify(rank) : rank} out of {card.total_students}
+                    {typeof rank === 'object'
+                      ? Object.entries(rank).map(([k, v]) => `${k}: ${v}`).join(', ')
+                      : String(rank)} out of {card.total_students}
                   </p>
                 </div>
               </div>
@@ -196,8 +198,15 @@ const ReportCard = () => {
             {conduct && (
               <div>
                 <h4 className="font-semibold mb-3">Conduct</h4>
-                <div className="p-3 rounded-xl bg-muted text-sm">
-                  {typeof conduct === 'object' ? JSON.stringify(conduct) : conduct}
+                <div className="p-3 rounded-xl bg-muted text-sm space-y-1">
+                  {typeof conduct === 'object'
+                    ? Object.entries(conduct).map(([k, v]) => (
+                        <div key={k} className="flex justify-between">
+                          <span className="text-muted-foreground">{k}</span>
+                          <span className="font-medium">{String(v)}</span>
+                        </div>
+                      ))
+                    : String(conduct)}
                 </div>
               </div>
             )}
