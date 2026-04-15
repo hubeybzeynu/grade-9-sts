@@ -302,94 +302,73 @@ const ResultsPage = () => {
         </div>
       </motion.div>
 
-      {/* Result Modal */}
+      {/* Result Modal - Full screen with proper image sizing */}
       <AnimatePresence>
         {showResult && resultImages[studentId] && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={() => setShowResult(false)}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex flex-col bg-black"
           >
-            {/* Left Arrow */}
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={(e) => {
-                e.stopPropagation();
-                const currentIndex = studentIds.indexOf(studentId);
-                if (currentIndex > 0) {
-                  setStudentId(studentIds[currentIndex - 1]);
-                } else {
-                  setStudentId(studentIds[studentIds.length - 1]);
-                }
-              }}
-              className="absolute left-4 md:left-8 p-3 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm transition-colors z-10"
-            >
-              <ChevronLeft className="w-6 h-6" />
-            </motion.button>
-
-            {/* Right Arrow */}
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={(e) => {
-                e.stopPropagation();
-                const currentIndex = studentIds.indexOf(studentId);
-                if (currentIndex < studentIds.length - 1) {
-                  setStudentId(studentIds[currentIndex + 1]);
-                } else {
-                  setStudentId(studentIds[0]);
-                }
-              }}
-              className="absolute right-4 md:right-8 p-3 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm transition-colors z-10"
-            >
-              <ChevronRight className="w-6 h-6" />
-            </motion.button>
-
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              onClick={(e) => e.stopPropagation()}
-              className="relative max-w-3xl w-full"
-            >
+            {/* Top bar */}
+            <div className="flex items-center justify-between px-4 py-3 bg-black/80 shrink-0">
+              <span className="text-sm text-white/70 font-mono">ID: {studentId}</span>
+              <span className="text-xs text-white/50">
+                {studentIds.indexOf(studentId) + 1} / {studentIds.length}
+              </span>
               <motion.button
-                whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
                 onClick={() => setShowResult(false)}
-                className="absolute -top-12 right-0 p-2 rounded-xl bg-white/10 hover:bg-white/20 transition-colors"
+                className="p-2 rounded-full bg-white/10"
               >
-                <X className="w-6 h-6" />
+                <X className="w-5 h-5 text-white" />
               </motion.button>
+            </div>
 
-              <div className="glass-card p-4 overflow-hidden">
-                <div className="text-center mb-2">
-                  <span className="text-sm text-muted-foreground font-mono">ID: {studentId}</span>
-                  <span className="mx-2 text-muted-foreground">•</span>
-                  <span className="text-sm text-muted-foreground">
-                    {studentIds.indexOf(studentId) + 1} of {studentIds.length}
-                  </span>
-                </div>
-                <img
-                  src={resultImages[studentId]}
-                  alt="Ministry Result"
-                  className="w-full rounded-xl"
-                />
-                <div className="mt-4 flex gap-3">
-                  <motion.button
-                    onClick={() => handleDownload(downloadLinks[studentId] || resultImages[studentId], `result_${studentId}.jpg`)}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="btn-gradient flex-1 flex items-center justify-center gap-2"
-                  >
-                    <Download className="w-5 h-5" />
-                    Download Result
-                  </motion.button>
-                </div>
-              </div>
-            </motion.div>
+            {/* Image area - full width */}
+            <div className="flex-1 flex items-center justify-center overflow-auto p-2 relative">
+              {/* Navigation arrows - small, outside the image */}
+              <button
+                onClick={() => {
+                  const currentIndex = studentIds.indexOf(studentId);
+                  setStudentId(studentIds[currentIndex > 0 ? currentIndex - 1 : studentIds.length - 1]);
+                }}
+                className="absolute left-1 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-white/20 flex items-center justify-center active:bg-white/30"
+              >
+                <ChevronLeft className="w-4 h-4 text-white" />
+              </button>
+              <button
+                onClick={() => {
+                  const currentIndex = studentIds.indexOf(studentId);
+                  setStudentId(studentIds[currentIndex < studentIds.length - 1 ? currentIndex + 1 : 0]);
+                }}
+                className="absolute right-1 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-white/20 flex items-center justify-center active:bg-white/30"
+              >
+                <ChevronRight className="w-4 h-4 text-white" />
+              </button>
+
+              <img
+                src={resultImages[studentId]}
+                alt="Ministry Result"
+                className="max-w-full max-h-full object-contain rounded-lg"
+              />
+            </div>
+
+            {/* Bottom bar */}
+            <div className="px-4 py-3 bg-black/80 shrink-0">
+              <motion.button
+                onClick={() => {
+                  const url = downloadLinks[studentId] || resultImages[studentId];
+                  handleDownload(url, `result_${studentId}.jpg`);
+                }}
+                whileTap={{ scale: 0.98 }}
+                className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-medium text-sm flex items-center justify-center gap-2"
+              >
+                <Download className="w-5 h-5" />
+                Allow download to save this image
+              </motion.button>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
