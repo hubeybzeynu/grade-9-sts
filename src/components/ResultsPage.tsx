@@ -351,32 +351,36 @@ const ResultsPage = () => {
               </motion.button>
             </div>
 
-            {/* Image area - full width */}
-            <div className="flex-1 flex items-center justify-center overflow-auto p-2 relative">
+            {/* Image area - full width with swipe */}
+            <div
+              className="flex-1 flex items-center justify-center overflow-auto p-2 relative"
+              onTouchStart={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
+              style={{ touchAction: 'pan-y' }}
+            >
               {/* Navigation arrows - small, outside the image */}
               <button
-                onClick={() => {
-                  const currentIndex = studentIds.indexOf(studentId);
-                  setStudentId(studentIds[currentIndex > 0 ? currentIndex - 1 : studentIds.length - 1]);
-                }}
+                onClick={goPrev}
                 className="absolute left-1 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-white/20 flex items-center justify-center active:bg-white/30"
               >
                 <ChevronLeft className="w-4 h-4 text-white" />
               </button>
               <button
-                onClick={() => {
-                  const currentIndex = studentIds.indexOf(studentId);
-                  setStudentId(studentIds[currentIndex < studentIds.length - 1 ? currentIndex + 1 : 0]);
-                }}
+                onClick={goNext}
                 className="absolute right-1 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-white/20 flex items-center justify-center active:bg-white/30"
               >
                 <ChevronRight className="w-4 h-4 text-white" />
               </button>
 
-              <img
+              <motion.img
+                key={studentId}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.2 }}
                 src={resultImages[studentId]}
                 alt="Ministry Result"
-                className="max-w-full max-h-full object-contain rounded-lg"
+                className="max-w-full max-h-full object-contain rounded-lg select-none"
+                draggable={false}
               />
             </div>
 
