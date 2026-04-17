@@ -98,11 +98,9 @@ const Index = () => {
   return (
     <div className="min-h-screen">
       <Navbar currentPage={currentPage} onNavigate={navigateTo} />
-      <AnimatePresence mode="wait">
-        <div key={currentPage}>
-          {renderPage()}
-        </div>
-      </AnimatePresence>
+      <div key={currentPage}>
+        {renderPage()}
+      </div>
     </div>
   );
 };
