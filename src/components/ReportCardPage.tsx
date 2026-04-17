@@ -55,6 +55,9 @@ const ReportCardPage = () => {
   const [cardPwdInput, setCardPwdInput] = useState('');
   const [cardPwdError, setCardPwdError] = useState('');
   const [unlockedCardIds, setUnlockedCardIds] = useState<Set<string>>(new Set());
+  // Student verification (like ExamResultPage)
+  const [verifiedStudent, setVerifiedStudent] = useState<{ id: number; name: string; english_name: string; image_url: string | null } | null>(null);
+  const [verifying, setVerifying] = useState(false);
 
   // Realtime subscription
   useEffect(() => {
