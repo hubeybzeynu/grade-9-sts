@@ -3,11 +3,12 @@ import { motion } from 'framer-motion';
 import {
   Info, ChevronRight, User as UserIcon,
   BookOpen, Award, ClipboardList, FileCheck, FileText,
-  Send, ArrowLeft, ExternalLink, HelpCircle, Star, LogOut,
+  Send, ArrowLeft, ExternalLink, MessageSquare, Star, LogOut,
 } from 'lucide-react';
 import type { User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import RatingForm from './RatingForm';
+import FeedbackList from './FeedbackList';
 
 interface InfoPageProps {
   onBack: () => void;
@@ -16,13 +17,6 @@ interface InfoPageProps {
 
 const InfoPage = ({ onBack, user }: InfoPageProps) => {
   const [activeSection, setActiveSection] = useState<string | null>(null);
-  const [helpMessage, setHelpMessage] = useState('');
-  const [helpName, setHelpName] = useState(
-    (user?.user_metadata?.full_name as string) || (user?.user_metadata?.name as string) || ''
-  );
-  const [messageSent, setMessageSent] = useState(false);
-  const [sending, setSending] = useState(false);
-  const [sendError, setSendError] = useState('');
   const [signingOut, setSigningOut] = useState(false);
 
   // Notify on first render that someone visited Info (only once per session)
@@ -48,33 +42,7 @@ const InfoPage = ({ onBack, user }: InfoPageProps) => {
       .catch(() => {/* silent */});
   }, [user]);
 
-  const handleSendMessage = async () => {
-    if (!helpMessage.trim()) return;
-    setSending(true);
-    setSendError('');
-
-    try {
-      const { error } = await supabase.functions.invoke('notify-telegram', {
-        body: {
-          type: 'rating',
-          rating: 0, // not a rating, but reuse channel
-          message: `📩 HELP REQUEST\n${helpMessage}`,
-          user: {
-            id: user?.id,
-            email: user?.email,
-            name: helpName || user?.email,
-          },
-        },
-      });
-      if (error) throw error;
-      setMessageSent(true);
-      setHelpMessage('');
-      setTimeout(() => setMessageSent(false), 3000);
-    } catch (e) {
-      setSendError(e instanceof Error ? e.message : 'Failed to send. Try again.');
-    }
-    setSending(false);
-  };
+  // (Help section removed — replaced by Feedback wall)
 
   const handleSignOut = async () => {
     setSigningOut(true);
