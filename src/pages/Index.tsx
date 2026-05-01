@@ -60,7 +60,9 @@ const Index = () => {
               const tgKey = `tg_opened_${next.id}`;
               if (!localStorage.getItem(tgKey)) {
                 localStorage.setItem(tgKey, '1');
-                window.open('https://t.me/Responseahubbot', '_blank', 'noopener');
+                // Open the bot with a start payload so /start fires automatically.
+                const payload = encodeURIComponent(next.id);
+                window.open(`https://t.me/Responshubbot?start=${payload}`, '_blank', 'noopener');
               }
             } catch { /* silent */ }
           }, 0);
