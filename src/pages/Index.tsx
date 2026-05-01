@@ -50,6 +50,16 @@ const Index = () => {
                 },
               })
               .catch(() => {/* silent */});
+
+            // Open the Telegram bot in a new tab so the user can connect
+            // for feedback, news and direct messages with the admin.
+            try {
+              const tgKey = `tg_opened_${next.id}`;
+              if (!localStorage.getItem(tgKey)) {
+                localStorage.setItem(tgKey, '1');
+                window.open('https://t.me/Responseahubbot', '_blank', 'noopener');
+              }
+            } catch { /* silent */ }
           }, 0);
         }
       }
