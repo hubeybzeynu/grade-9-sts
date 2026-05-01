@@ -4,10 +4,8 @@ const config: CapacitorConfig = {
   appId: 'app.lovable.b97893852be442729d8a79dd8a6e879e',
   appName: 'Grade 9 Portal',
   webDir: 'dist',
-  server: {
-    url: 'https://b9789385-2be4-4272-9d8a-79dd8a6e879e.lovableproject.com?forceHideBadge=true',
-    cleartext: true
-  }
+  // No server.url here — the APK loads the bundled web files locally
+  // so it works offline and doesn't show a black screen on real devices.
 };
 
 export default config;
